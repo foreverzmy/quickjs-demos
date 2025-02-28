@@ -4,15 +4,22 @@
 // 定义一个宏方法，用于计算数组元素个数
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
-// Class ID，用于标识 Car 类
-static JSClassID js_car_class_id;
-
 // Car structure
 typedef struct {
   char dummy;
   // char brand[50]; // 存储汽车品牌，最大长度为 49 个字符
   // int year;       // 存储汽车生产年份
 } Car;
+
+// Class ID，用于标识 Car 类
+static JSClassID js_car_class_id;
+
+// Finalizer to clean up, 定义析构函数，用于清理 Car 实例
+static void js_car_finalizer(JSRuntime *rt, JSValue val) {
+  Car *car = JS_GetOpaque(val, js_car_class_id);
+  printf("===Car finalizer called\n");
+  js_free_rt(rt, car);
+}
 
 // Constructor，用于创建新的 Car 实例
 static JSValue js_car_constructor(JSContext *ctx, JSValueConst new_target,
@@ -59,46 +66,38 @@ static JSValue js_car_constructor(JSContext *ctx, JSValueConst new_target,
   return obj;
 fail:
   js_free(ctx, car);
-  if (!JS_IsUndefined(proto))
-    JS_FreeValue(ctx, proto);
-  if (!JS_IsUndefined(obj))
-    JS_FreeValue(ctx, obj);
+  JS_FreeValue(ctx, obj);
   return JS_EXCEPTION;
 }
 
 // Age calculation method
-static JSValue js_car_age(JSContext *ctx, JSValueConst this_val, int argc,
-                          JSValueConst *argv) {
+static JSValue js_car_echo(JSContext *ctx, JSValueConst this_val, int argc,
+                           JSValueConst *argv) {
   // 从 JS 对象中获取 Car 结构体指针
   Car *car = JS_GetOpaque2(ctx, this_val, js_car_class_id);
-  // int current_year;
-
   // 检查是否成功获取 Car 结构体
   if (!car)
     return JS_EXCEPTION;
 
+  // int current_year;
+
   // 从参数中获取当前年份
   // JS_ToInt32(ctx, &current_year, argv[0]);
   // 计算并返回汽车年龄
-  return JS_NewString(ctx, "foreverz");
-}
-
-// Car class definition, 定义 Car 类的原型方法列表
-static const JSCFunctionListEntry js_car_proto_funcs[] = {
-    JS_CFUNC_DEF("age", 0, js_car_age),
-};
-
-// Finalizer to clean up, 定义析构函数，用于清理 Car 实例
-static void js_car_finalizer(JSRuntime *rt, JSValue val) {
-  printf("Finalizer: freeing car\n");
-  Car *car = JS_GetOpaque(val, js_car_class_id);
-  if (car) {
-    js_free_rt(rt, car);
-  }
+  printf("====echo called===");
+  return JS_NewString(ctx, "Hi！");
 }
 
 // Class definition，定义 Car 类的基本信息
-static const JSClassDef js_car_class = {"Car", .finalizer = js_car_finalizer};
+static JSClassDef js_car_class = {
+    "Car",
+    .finalizer = js_car_finalizer,
+};
+
+// Car class definition, 定义 Car 类的原型方法列表
+static const JSCFunctionListEntry js_car_proto_funcs[] = {
+    JS_CFUNC_DEF("echo", 0, js_car_echo),
+};
 
 // Initialize the class
 int js_car_init(JSContext *ctx) { // Remove 'static' here

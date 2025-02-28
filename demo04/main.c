@@ -2,7 +2,6 @@
 #include "../quickjs/quickjs.h"
 #include "./car.c"
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 int main(int argc, char **argv) {
@@ -14,25 +13,12 @@ int main(int argc, char **argv) {
   // Initialize Car class
   js_car_init(ctx);
 
-  FILE *fp = fopen("point.js", "r");
-  if (!fp) {
-    fprintf(stderr, "无法打开 point.js 文件\n");
-    return 1;
-  }
-
-  // 获取文件大小
-  fseek(fp, 0, SEEK_END);
-  long file_size = ftell(fp);
-  fseek(fp, 0, SEEK_SET);
-
-  // 分配内存并读取文件内容
-  char *js_code = malloc(file_size + 1);
-  fread(js_code, 1, file_size, fp);
-  js_code[file_size] = '\0';
-  fclose(fp);
+  // Your JavaScript code can now use the Car class
+  const char *js_code = "const myCar = new Car();\n"
+                        "console.log(myCar.echo('hello world!'));\n";
 
   JSValue val =
-      JS_Eval(ctx, js_code, strlen(js_code), "a.js", JS_EVAL_TYPE_MODULE);
+      JS_Eval(ctx, js_code, strlen(js_code), "<input>", JS_EVAL_TYPE_GLOBAL);
 
   if (JS_IsException(val)) {
     JSValue exc = JS_GetException(ctx);
