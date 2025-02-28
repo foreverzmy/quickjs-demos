@@ -38,3 +38,23 @@ Use Quickjs Run JS Code with Console API.
 cd demo03
 make clean && make && ./main
 ```
+
+
+## Demo04
+
+Use Quickjs Run JS Code with C Class Constructor.
+
+```sh
+cd demo04
+make clean && make && ./main
+```
+
+
+## Demo05
+
+Use Quickjs Run JS Module Code with import C Module Code.
+
+```sh
+cd demo05
+make clean && make && ./main
+```
