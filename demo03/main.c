@@ -2,15 +2,23 @@
 #include <stdio.h>
 #include <string.h>
 
-// C function to be called from JavaScript
-static JSValue js_add(JSContext *ctx, JSValueConst this_val, int argc,
-                      JSValueConst *argv) {
-  int a, b;
-  if (JS_ToInt32(ctx, &a, argv[0]))
-    return JS_EXCEPTION;
-  if (JS_ToInt32(ctx, &b, argv[1]))
-    return JS_EXCEPTION;
-  return JS_NewInt32(ctx, a + b);
+static JSValue js_print(JSContext *ctx, JSValueConst this_val, int argc,
+                        JSValueConst *argv) {
+  int i;
+  const char *str;
+  size_t len;
+
+  for (i = 0; i < argc; i++) {
+    if (i != 0)
+      putchar(' ');
+    str = JS_ToCStringLen(ctx, &len, argv[i]);
+    if (!str)
+      return JS_EXCEPTION;
+    fwrite(str, 1, len, stdout);
+    JS_FreeCString(ctx, str);
+  }
+  putchar('\n');
+  return JS_UNDEFINED;
 }
 
 int main(int argc, char **argv) {
@@ -19,13 +27,14 @@ int main(int argc, char **argv) {
 
   // Get the global object
   JSValue global_obj = JS_GetGlobalObject(ctx);
+  JSValue console = JS_NewObject(ctx);
 
-  // Define the C function in JavaScript environment
-  JSValue add_func = JS_NewCFunction(ctx, js_add, "add", 2);
-  JS_SetPropertyStr(ctx, global_obj, "add", add_func);
+  JS_SetPropertyStr(ctx, console, "log",
+                    JS_NewCFunction(ctx, js_print, "log", 1));
+  JS_SetPropertyStr(ctx, global_obj, "console", console);
 
   // Execute JavaScript code that uses the C function
-  const char *user_code = "add(11, 22)";
+  const char *user_code = "console.log('Hello World!')";
 
   JSValue val = JS_Eval(ctx, user_code, strlen(user_code), "<input>",
                         JS_EVAL_TYPE_GLOBAL);
@@ -39,11 +48,6 @@ int main(int argc, char **argv) {
 
     return 1;
   }
-
-  int result;
-  if (JS_ToInt32(ctx, &result, val))
-    return 1;
-  printf("Result: %d\n", result);
 
   JS_FreeValue(ctx, val);
   JS_FreeValue(ctx, global_obj);

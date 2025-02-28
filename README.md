@@ -17,7 +17,7 @@ cd quickjs && make
 Use Quickjs Run JS Code and Call JS Function In C.
 
 ```sh
-cd demo1
+cd demo01
 make clean && make && ./main
 ```
 
@@ -26,6 +26,15 @@ make clean && make && ./main
 Use Quickjs Run JS Code and Call C Function In JS.
 
 ```sh
-cd demo2
+cd demo02
+make clean && make && ./main
+```
+
+## Demo03
+
+Use Quickjs Run JS Code with Console API.
+
+```sh
+cd demo03
 make clean && make && ./main
 ```
