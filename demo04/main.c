@@ -1,6 +1,6 @@
 #include "../demo03/console.c"
 #include "../quickjs/quickjs.h"
-#include "./car.c"
+#include "./vendor.c"
 #include <stdio.h>
 #include <string.h>
 
@@ -11,11 +11,12 @@ int main(int argc, char **argv) {
   init_std_console(ctx);
 
   // Initialize Car class
-  js_car_init(ctx);
+  js_init_vendor_class(ctx);
 
   // Your JavaScript code can now use the Car class
-  const char *js_code = "const myCar = new Car();\n"
-                        "console.log(myCar.echo('hello world!'));\n";
+  const char *js_code = "const v = new Vendor('Mervyn');\n"
+                        "console.log('==log 1===', v.echo());\n"
+                        "console.log('==log 2===', v.echo());\n";
 
   JSValue val =
       JS_Eval(ctx, js_code, strlen(js_code), "<input>", JS_EVAL_TYPE_GLOBAL);
