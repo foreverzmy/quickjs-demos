@@ -1,4 +1,4 @@
-#include "../demo03/console.c"
+#include "../helpers/console.c"
 #include "../helpers/file.c"
 #include "../quickjs/quickjs.h"
 #include "./point.c"
