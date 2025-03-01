@@ -10,7 +10,7 @@ int main(int argc, char **argv) {
 
   init_std_console(ctx);
 
-  // Initialize Car class
+  // Initialize Vendor class
   js_init_vendor_class(ctx);
 
   // Your JavaScript code can now use the Car class

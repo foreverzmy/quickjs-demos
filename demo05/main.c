@@ -1,4 +1,5 @@
 #include "../demo03/console.c"
+#include "../helpers/file.c"
 #include "../quickjs/quickjs.h"
 #include "./point.c"
 #include <stdio.h>
@@ -14,25 +15,11 @@ int main(int argc, char **argv) {
   // Initialize Point module
   js_init_module(ctx, "point");
 
-  FILE *fp = fopen("point.js", "r");
-  if (!fp) {
-    fprintf(stderr, "无法打开 point.js 文件\n");
-    return 1;
-  }
-
-  // 获取文件大小
-  fseek(fp, 0, SEEK_END);
-  long file_size = ftell(fp);
-  fseek(fp, 0, SEEK_SET);
-
-  // 分配内存并读取文件内容
-  char *js_code = malloc(file_size + 1);
-  fread(js_code, 1, file_size, fp);
-  js_code[file_size] = '\0';
-  fclose(fp);
+  char *js_code = read_file_to_string("point.js");
 
   JSValue val =
       JS_Eval(ctx, js_code, strlen(js_code), "a.js", JS_EVAL_TYPE_MODULE);
+  free(js_code);
 
   if (JS_IsException(val)) {
     JSValue exc = JS_GetException(ctx);
