@@ -1,3 +1,4 @@
+#include "../helpers/exception.c"
 #include "../quickjs/quickjs.h"
 #include <stdio.h>
 #include <string.h>
@@ -31,11 +32,7 @@ int main(int argc, char **argv) {
                         JS_EVAL_TYPE_GLOBAL);
 
   if (JS_IsException(val)) {
-    JSValue exc = JS_GetException(ctx);
-    const char *str = JS_ToCString(ctx, exc);
-    fprintf(stderr, "Error: %s\n", str);
-    JS_FreeCString(ctx, str);
-    JS_FreeValue(ctx, exc);
+    check_and_print_exception(ctx);
 
     return 1;
   }
@@ -47,6 +44,9 @@ int main(int argc, char **argv) {
 
   JS_FreeValue(ctx, val);
   JS_FreeValue(ctx, global_obj);
+
+  JS_RunGC(rt);
+
   JS_FreeContext(ctx);
   JS_FreeRuntime(rt);
 

@@ -60,6 +60,9 @@ int main(int argc, char **argv) {
   JS_FreeValue(ctx, result);
   JS_FreeValue(ctx, add_func);
   JS_FreeValue(ctx, global_obj);
+
+  JS_RunGC(rt);
+
   JS_FreeContext(ctx);
   JS_FreeRuntime(rt);
 

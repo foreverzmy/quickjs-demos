@@ -58,3 +58,12 @@ Use Quickjs Run JS Module Code with import C Module Code.
 cd demo05
 make clean && make && ./main
 ```
+
+## Demo06
+
+Use QuickJS to compile JavaScript code to bytecode, then read and execute the bytecode.
+
+```sh
+cd demo06
+make clean && make && ./main
+```

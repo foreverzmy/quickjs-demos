@@ -1,7 +1,7 @@
 #include "../helpers/console.c"
+#include "../helpers/exception.c"
 #include "../quickjs/quickjs.h"
 #include "./vendor.c"
-#include <stdio.h>
 #include <string.h>
 
 int main(int argc, char **argv) {
@@ -22,16 +22,14 @@ int main(int argc, char **argv) {
       JS_Eval(ctx, js_code, strlen(js_code), "<input>", JS_EVAL_TYPE_GLOBAL);
 
   if (JS_IsException(val)) {
-    JSValue exc = JS_GetException(ctx);
-    const char *str = JS_ToCString(ctx, exc);
-    fprintf(stderr, "Error: %s\n", str);
-    JS_FreeCString(ctx, str);
-    JS_FreeValue(ctx, exc);
-    JS_FreeValue(ctx, val);
+    check_and_print_exception(ctx);
     return 1;
   }
 
   JS_FreeValue(ctx, val);
+
+  JS_RunGC(rt);
+
   JS_FreeContext(ctx);
   JS_FreeRuntime(rt);
   return 0;

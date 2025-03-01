@@ -1,8 +1,8 @@
 #include "../helpers/console.c"
+#include "../helpers/exception.c"
 #include "../helpers/file.c"
 #include "../quickjs/quickjs.h"
 #include "./point.c"
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -22,16 +22,14 @@ int main(int argc, char **argv) {
   free(js_code);
 
   if (JS_IsException(val)) {
-    JSValue exc = JS_GetException(ctx);
-    const char *str = JS_ToCString(ctx, exc);
-    fprintf(stderr, "Error: %s\n", str);
-    JS_FreeCString(ctx, str);
-    JS_FreeValue(ctx, exc);
-    JS_FreeValue(ctx, val);
+    check_and_print_exception(ctx);
     return 1;
   }
 
   JS_FreeValue(ctx, val);
+
+  JS_RunGC(rt);
+
   JS_FreeContext(ctx);
   JS_FreeRuntime(rt);
   return 0;
