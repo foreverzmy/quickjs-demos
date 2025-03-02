@@ -1,7 +1,7 @@
 #include "../helpers/console.c"
 #include "../helpers/exception.c"
-#include "../helpers/file.c"
 #include "../quickjs/quickjs.h"
+#include "./cache.c"
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -145,12 +145,17 @@ void destroy_task_queue(TaskQueue *queue) {
 
 // Function to evaluate a JS file with QuickJS
 static int eval_file(JSContext *ctx, const char *filename) {
-  char *js_code = read_file_to_string(filename);
+  size_t length = 0;
+  char *js_code = get_file_content(filename, &length);
+
+  if (!js_code) {
+    fprintf(stderr, "Failed to read file: %s\n", filename);
+    return -1;
+  }
 
   // Evaluate JS code
   JSValue val =
       JS_Eval(ctx, js_code, strlen(js_code), filename, JS_EVAL_TYPE_GLOBAL);
-  free(js_code);
 
   if (JS_IsException(val)) {
     check_and_print_exception(ctx);
@@ -433,15 +438,18 @@ int main(int argc, char **argv) {
   }
 
   printf("--------------------------------------------------\n");
-  printf("Total execution time across all tasks: %.6f seconds\n", total_time);
-  printf("Average execution time per task: %.6f seconds\n",
-         total_time / num_files);
+  printf("Total execution time across all tasks: %.6f seconds.\n", total_time);
+  printf("Average execution time per task: %.6f ms.\n",
+         total_time / total_tasks * 1000);
 
   end = clock();
-  printf("Total execution time: %.6f seconds\n",
+  printf("Total execution time: %.6f seconds.\n",
          ((double)(end - start)) / CLOCKS_PER_SEC);
 
   free(file_times);
+
+  // 在关闭线程池之前清理文件缓存
+  cleanup_file_cache();
 
   // 关闭线程池
   shutdown_thread_pool(pool);
