@@ -67,3 +67,12 @@ Use QuickJS to compile JavaScript code to bytecode, then read and execute the by
 cd demo06
 make clean && make && ./main
 ```
+
+## Demo07
+
+Use QuickJS to implement a custom fetch implementation with async/await support.
+
+```sh
+cd demo07
+make clean && make && ./main
+```
