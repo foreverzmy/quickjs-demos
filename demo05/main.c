@@ -10,7 +10,7 @@ int main(int argc, char **argv) {
   JSRuntime *rt = JS_NewRuntime();
   JSContext *ctx = JS_NewContext(rt);
 
-  init_std_console(ctx);
+  js_std_init_console(ctx);
 
   // Initialize Point module
   js_init_module(ctx, "point");

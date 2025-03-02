@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
   JS_SetMemoryLimit(rt, 1024 * 1024 * 1024); // 1 GB memory limit
   JS_SetMaxStackSize(rt, 1024 * 1024 * 100); // 100 MB stack size
 
-  init_std_console(ctx);
+  js_std_init_console(ctx);
 
   // Your JavaScript code can now use the Car class
   const char *js_code = "'use strict';"

@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
   // Initialize curl globally
   curl_global_init(CURL_GLOBAL_DEFAULT);
 
-  init_std_console(ctx);
+  js_std_init_console(ctx);
 
   // Initialize the fetch module
   js_init_fetch(ctx);

@@ -8,7 +8,7 @@ int main(int argc, char **argv) {
   JSRuntime *rt = JS_NewRuntime();
   JSContext *ctx = JS_NewContext(rt);
 
-  init_std_console(ctx);
+  js_std_init_console(ctx);
 
   // Initialize Vendor class
   js_init_vendor_class(ctx);
