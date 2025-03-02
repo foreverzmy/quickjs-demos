@@ -7,10 +7,12 @@ int main(int argc, char **argv) {
   JSRuntime *rt = JS_NewRuntime();
   JSContext *ctx = JS_NewContext(rt);
 
-  init_std_console(ctx);
+  js_std_init_console(ctx);
 
   // Execute JavaScript code that uses the C function
-  const char *js_code = "console.log('Hello World!')";
+  const char *js_code = "console.log('Hello World!');"
+                        "console.warn('Hello World!');"
+                        "console.error('Hello World!');";
 
   JSValue val =
       JS_Eval(ctx, js_code, strlen(js_code), "<input>", JS_EVAL_TYPE_GLOBAL);
