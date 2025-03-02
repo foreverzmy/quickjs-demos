@@ -76,3 +76,12 @@ Use QuickJS to implement a custom fetch implementation with async/await support.
 cd demo07
 make clean && make && ./main
 ```
+
+## Demo08
+
+Use QuickJS with a thread pool to benchmark JavaScript file execution performance. This demo creates a thread pool with multiple worker threads (based on CPU cores), each with its own QuickJS runtime, to execute JavaScript files in parallel.
+
+```sh
+cd demo08
+make clean && make && ./main test1.js test2.js test3.js test4.js 100
+```

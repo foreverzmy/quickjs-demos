@@ -1,0 +1,15 @@
+// console.log('==== test2.js ====');
+function assert(b, str)
+{
+    if (b) {
+        return;
+    } else {
+        throw Error("assertion failed: " + str);
+    }
+}
+
+assert(typeof globalThis.a === 'undefined');
+
+globalThis.a = 2;
+
+assert(globalThis.a === 2);
