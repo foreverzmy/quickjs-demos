@@ -20,7 +20,7 @@ void eval_script(JSContext *ctx, const char *script) {
   JS_FreeValue(ctx, result);
 
   // 处理可能产生的异步任务
-  process_jobs(ctx);
+  execute_microtask_timer(ctx);
 }
 
 int main(int argc, char **argv) {

@@ -1,3 +1,4 @@
+console.log('==== test5.js ====');
 let id1 = setTimeout(() => { 
   console.log('Timer 1 expired.'); 
 }, 1000);

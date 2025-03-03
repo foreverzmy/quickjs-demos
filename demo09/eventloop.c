@@ -25,8 +25,8 @@ void init_loop() {
 }
 
 // 执行 QuickJS 的微任务队列
-void on_microtask_timer(uv_timer_t *handle) {
-  JSContext *ctx = (JSContext *)handle->data;
+void execute_microtask_timer(JSContext *ctx) {
+  // JSContext *ctx = (JSContext *)handle->data;
   JSRuntime *rt = JS_GetRuntime(ctx);
 
   // 执行所有待处理的任务
@@ -36,14 +36,15 @@ void on_microtask_timer(uv_timer_t *handle) {
   } while (hasPending > 0);
 
   // 如果没有更多待处理任务，停止定时器
-  uv_timer_stop(handle);
+  // uv_timer_stop(handle);
 }
 
 // 启动微任务定时器
-void start_microtask_timer(JSContext *ctx) {
-  microtask_timer.data = ctx;
-  uv_timer_start(&microtask_timer, on_microtask_timer, 0, 10); // 每10ms检查一次
-}
+// void start_microtask_timer(JSContext *ctx) {
+//   microtask_timer.data = ctx;
+//   uv_timer_start(&microtask_timer, on_microtask_timer, 0, 1); //
+//   每10ms检查一次
+// }
 
 // 释放定时器资源
 void close_timer_callback(uv_handle_t *handle) {
@@ -80,7 +81,7 @@ void timer_callback(uv_timer_t *handle) {
   uv_close((uv_handle_t *)handle, close_timer_callback);
 
   // 启动微任务定时器，处理可能产生的微任务
-  start_microtask_timer(ctx);
+  execute_microtask_timer(ctx);
 }
 
 // setTimeout 实现
@@ -156,6 +157,3 @@ void js_std_init_timeout(JSContext *ctx) {
 
   JS_FreeValue(ctx, global_obj);
 }
-
-// 处理 Promise 和异步任务
-void process_jobs(JSContext *ctx) { start_microtask_timer(ctx); }
