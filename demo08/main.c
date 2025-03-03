@@ -442,10 +442,6 @@ int main(int argc, char **argv) {
   printf("Average execution time per task: %.6f ms.\n",
          total_time / total_tasks * 1000);
 
-  end = clock();
-  printf("Total execution time: %.6f seconds.\n",
-         ((double)(end - start)) / CLOCKS_PER_SEC);
-
   free(file_times);
 
   // 在关闭线程池之前清理文件缓存
@@ -456,6 +452,10 @@ int main(int argc, char **argv) {
 
   // 清理资源
   free(tasks);
+
+  end = clock();
+  printf("Total execution time: %.6f seconds.\n",
+         ((double)(end - start)) / CLOCKS_PER_SEC);
 
   return 0;
 }

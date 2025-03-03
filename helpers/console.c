@@ -9,16 +9,20 @@
 // 实现 console.log 的原生函数
 static JSValue js_console_log(JSContext *ctx, JSValueConst this_val, int argc,
                               JSValueConst *argv) {
-  for (int i = 0; i < argc; i++) {
-    const char *str = JS_ToCString(ctx, argv[i]);
-    if (!str) {
-      // 处理转换失败的情况
+  int i;
+  const char *str;
+  size_t len;
+
+  for (i = 0; i < argc; i++) {
+    if (i != 0)
+      putchar(' ');
+    str = JS_ToCStringLen(ctx, &len, argv[i]);
+    if (!str)
       return JS_EXCEPTION;
-    }
-    printf("%s%s", i > 0 ? " " : "", str);
+    fwrite(str, 1, len, stdout);
     JS_FreeCString(ctx, str);
   }
-  printf("\n");
+  putchar('\n');
   return JS_UNDEFINED;
 }
 

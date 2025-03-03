@@ -85,3 +85,13 @@ Use QuickJS with a thread pool to benchmark JavaScript file execution performanc
 cd demo08
 make clean && make && ./main test1.js test2.js test3.js test4.js 100
 ```
+
+## Demo09
+
+Use QuickJS with `libuv` to implement an event loop with `setTimeout` and `Promise` support. This demo shows how to integrate QuickJS with `libuv` to handle asynchronous JavaScript operations including timers and microtasks.
+
+```sh
+cd demo09
+make clean && make && make run
+```
+
