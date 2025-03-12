@@ -95,3 +95,11 @@ cd demo09
 make clean && make && make run
 ```
 
+## Demo10
+
+Use QuickJS to compile JavaScript code to bytecode and execute it, while demonstrating how to call loaded JavaScript functions after bytecode execution. This example shows how to compile, save, load, and execute JavaScript bytecode, as well as how to call compiled JavaScript functions from C code.
+
+```sh
+cd demo10
+make clean && make && make run
+```

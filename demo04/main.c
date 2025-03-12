@@ -1,10 +1,12 @@
+#include <string.h>
+
 #include "../helpers/console.c"
 #include "../helpers/exception.c"
 #include "../quickjs/quickjs.h"
 #include "./vendor.c"
-#include <string.h>
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
   JSRuntime *rt = JS_NewRuntime();
   JSContext *ctx = JS_NewContext(rt);
 
@@ -21,7 +23,8 @@ int main(int argc, char **argv) {
   JSValue val =
       JS_Eval(ctx, js_code, strlen(js_code), "<input>", JS_EVAL_TYPE_GLOBAL);
 
-  if (JS_IsException(val)) {
+  if (JS_IsException(val))
+  {
     check_and_print_exception(ctx);
     return 1;
   }
