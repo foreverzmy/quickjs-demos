@@ -12,3 +12,8 @@ run:
 
 clean:
 	rm -f main
+
+benchmark:
+	$(CC) $(CFLAGS) $(LIBUV_PATH) -lcurl -o benchmark benchmark.c $(LDFLAGS)
+	./benchmark
+	rm -rf benchmark
